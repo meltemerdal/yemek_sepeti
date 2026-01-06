@@ -1,0 +1,3317 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restoran Menüsü - Yemeksepeti</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        /* Header Styles - Yemeksepeti Design */
+        header {
+            background-color: #ffffff;
+            height: 70px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .logo {
+            cursor: pointer;
+        }
+        
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ff2d55;
+            letter-spacing: -0.5px;
+        }
+        
+        .address-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .address-section:hover {
+            background-color: #f0f1f3;
+        }
+        
+        .location-icon {
+            flex-shrink: 0;
+        }
+        
+        .address-text {
+            font-size: 13px;
+            color: #697488;
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Navigation Menu */
+        .nav-menu {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            color: #697488;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.2s;
+        }
+        
+        .nav-item:hover {
+            color: #ff2d55;
+        }
+        
+        .nav-item.active {
+            color: #ff2d55;
+        }
+        
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #ff2d55;
+            border-radius: 2px 2px 0 0;
+        }
+        
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* Header Right Section */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-menu-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .user-menu-button:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1d1d1f;
+        }
+        
+        .user-icon-svg {
+            flex-shrink: 0;
+        }
+        
+        .dropdown-arrow {
+            flex-shrink: 0;
+            transition: transform 0.3s;
+        }
+        
+        .user-menu.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .user-menu.active .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .user-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .user-dropdown-item:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .user-dropdown-item:last-child {
+            border-radius: 0 0 12px 12px;
+            border-bottom: none;
+        }
+        
+        .user-dropdown-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .dropdown-item-icon {
+            font-size: 18px;
+        }
+        
+        .icon-button {
+            position: relative;
+            background: transparent;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .icon-button:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .icon-button svg {
+            display: block;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            cursor: pointer;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: #ffd900;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: #d71f4b;
+            font-weight: bold;
+        }
+        
+        main {
+            padding: 40px 0;
+        }
+        
+        .restaurant-header {
+            background: white;
+            padding: 0;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .restaurant-banner {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .restaurant-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .restaurant-info-wrapper {
+            padding: 30px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        
+        .restaurant-image-left {
+            flex-shrink: 0;
+        }
+        
+        .restaurant-image-left img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .restaurant-info-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .restaurant-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .restaurant-main-info {
+            flex: 1;
+        }
+        
+        .restaurant-name {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        
+        .restaurant-category {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .restaurant-badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        
+        .badge.super-restaurant {
+            background: linear-gradient(135deg, #ff2d55 0%, #d71f4b 100%);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        
+        .badge.rating {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        
+        .badge.rating svg {
+            fill: #ffc107;
+        }
+        
+        .restaurant-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        
+        .restaurant-details {
+            display: flex;
+            gap: 24px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .detail-item svg {
+            flex-shrink: 0;
+        }
+        
+        .favorite-button {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 12px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            transition: all 0.3s;
+            height: fit-content;
+        }
+        
+        .favorite-button:hover {
+            border-color: #ff2d55;
+            color: #ff2d55;
+        }
+        
+        .favorite-button.active {
+            background: #ff2d55;
+            border-color: #ff2d55;
+            color: white;
+        }
+        
+        .favorite-button svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .favorite-button:hover svg {
+            transform: scale(1.2);
+        }
+        
+        /* Menu Category Tabs */
+        .menu-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding: 20px 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .menu-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .menu-tabs::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 3px;
+        }
+        
+        .menu-tab {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .menu-tab:hover {
+            border-color: #ff2d55;
+            color: #ff2d55;
+        }
+        
+        .menu-tab.active {
+            background: #ff2d55;
+            border-color: #ff2d55;
+            color: white;
+        }
+        
+        .menu-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        /* 🎨 MENU CARD STİLLERİ */
+        .menu-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e8e8e8;
+            transition: box-shadow 0.2s;
+        }
+        
+        .menu-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .menu-card-left {
+            flex: 1;
+        }
+        
+        .menu-card-right {
+            position: relative;
+        }
+        
+        .menu-card-right img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        
+        .menu-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0 0 8px 0;
+        }
+        
+        .menu-price {
+            margin-bottom: 8px;
+        }
+        
+        .price-current {
+            font-size: 16px;
+            color: #d71f4b;
+            font-weight: 600;
+        }
+        
+        .menu-desc {
+            color: #808080;
+            font-size: 13px;
+            line-height: 1.4;
+            margin: 0 0 8px 0;
+        }
+        
+        .menu-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #f5f5f5;
+            color: #666;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .stok-yok {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 4px 8px;
+            background: #eee;
+            color: #999;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+        
+        .menu-item {
+            background: white;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            transition: box-shadow 0.2s;
+        }
+        
+        .menu-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .item-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .item-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            line-height: 1.3;
+        }
+        
+        .item-price {
+            font-size: 14px;
+            color: #d71f4b;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        
+        .item-description {
+            color: #808080;
+            font-size: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 4px;
+        }
+        
+        .item-image-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+        
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .add-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ff3b5c;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+        
+        .add-btn:hover {
+            background: #d71f4b;
+            transform: scale(1.1);
+        }
+        
+        /* 🚫 TÜKENDİ DURUM STİLLERİ */
+        .out-of-stock {
+            opacity: 0.6;
+            position: relative;
+        }
+        
+        .out-of-stock::after {
+            content: "TÜKENDİ";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: red;
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+        
+        .add-btn:disabled,
+        .add-btn.disabled {
+            pointer-events: none; /* 👈 tıklamayı tamamen öldürür */
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .item-stock {
+            display: none;
+        }
+        
+        .item-footer {
+            display: none;
+        }
+        
+        .add-to-cart {
+            display: none;
+        }
+        
+        /* Address Modal Styles */
+        .address-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .address-modal.active {
+            display: flex;
+        }
+        
+        .address-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        .address-modal-content {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .address-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .address-modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 0;
+        }
+        
+        .address-modal-close {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            color: #697488;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: color 0.2s;
+        }
+        
+        .address-modal-close:hover {
+            color: #1d1d1f;
+        }
+        
+        .address-modal-body {
+            padding: 24px;
+            max-height: calc(80vh - 80px);
+            overflow-y: auto;
+        }
+        
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .payment-modal.active {
+            display: flex;
+        }
+        
+        .payment-modal-content {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s;
+        }
+        
+        .payment-modal-header {
+            padding: 20px;
+            background: #f8f8f8;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .payment-modal-body {
+            padding: 20px;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .payment-method:hover {
+            border-color: #d71f4b;
+            background: #fff5f7;
+        }
+        
+        .payment-method.selected {
+            border-color: #d71f4b;
+            background: #fff5f7;
+        }
+        
+        .payment-method input[type="radio"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .payment-form {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .payment-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #d71f4b;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .pos-option {
+            margin-top: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .pos-option input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .payment-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .btn-confirm {
+            flex: 2;
+            padding: 12px;
+            background: #d71f4b;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+        }
+        
+        .btn-confirm:hover {
+            background: #b91840;
+        }
+        
+        .saved-cards {
+            margin-bottom: 20px;
+        }
+        
+        .saved-card-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .saved-card-item:hover {
+            border-color: #d71f4b;
+            background: #fff5f7;
+        }
+        
+        .saved-card-item.selected {
+            border-color: #d71f4b;
+            background: #fff5f7;
+        }
+        
+        .saved-card-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .saved-card-info input[type="radio"] {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .card-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-number-display {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .card-name-display {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .delete-card {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .delete-card:hover {
+            background: #e0e0e0;
+            color: #d71f4b;
+        }
+        
+        .add-new-card {
+            padding: 12px;
+            background: #f8f8f8;
+            border: 2px dashed #d71f4b;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            color: #d71f4b;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .add-new-card:hover {
+            background: #fff5f7;
+        }
+        
+        .save-card-option {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+        
+        .save-card-option h4 {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .save-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .save-option-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .save-option-btn:hover {
+            border-color: #d71f4b;
+        }
+        
+        .save-option-btn.selected {
+            border-color: #d71f4b;
+            background: #fff5f7;
+            color: #d71f4b;
+            font-weight: 600;
+        }
+        
+        .address-search {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+        
+        .address-search:focus-within {
+            border-color: #ff2d55;
+        }
+        
+        .address-search svg {
+            flex-shrink: 0;
+        }
+        
+        .address-search input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            color: #1d1d1f;
+        }
+        
+        .address-search input::placeholder {
+            color: #999;
+        }
+        
+        .address-suggestions {
+            margin-top: 20px;
+        }
+        
+        .address-suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .address-suggestion-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .address-suggestion-item svg {
+            flex-shrink: 0;
+        }
+        
+        .suggestion-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-bottom: 2px;
+        }
+        
+        .suggestion-subtitle {
+            font-size: 13px;
+            color: #697488;
+        }
+        
+        .cart-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #d71f4b;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(215,31,75,0.4);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .cart-toggle.active {
+            display: flex;
+        }
+        
+        .cart-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(215,31,75,0.6);
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff2d55;
+            color: white;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+        
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            transition: opacity 0.3s;
+        }
+        
+        .cart-overlay.active {
+            display: block;
+        }
+        
+        .cart {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s ease;
+        }
+        
+        .cart.active {
+            right: 0;
+        }
+        
+        .cart-header {
+            padding: 20px;
+            background: #f8f8f8;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+        
+        .cart-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .cart-close:hover {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .cart-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .cart-empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        
+        .cart-item-price {
+            color: #d71f4b;
+            font-weight: bold;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .cart-item-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cart-item-btn:hover {
+            border-color: #d71f4b;
+            color: #d71f4b;
+        }
+        
+        .cart-item-remove {
+            color: #999;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 4px;
+        }
+        
+        .cart-item-remove:hover {
+            color: #d71f4b;
+        }
+        
+        .cart-footer {
+            padding: 20px;
+            background: #f8f8f8;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .cart-summary {
+            margin-bottom: 16px;
+        }
+        
+        .cart-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: bold;
+            padding-top: 12px;
+            border-top: 2px solid #e0e0e0;
+            margin-top: 12px;
+        }
+        
+        .cart-checkout {
+            width: 100%;
+            padding: 16px;
+            background: #d71f4b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .cart-checkout:hover {
+            background: #b91840;
+        }
+        
+        .cart-checkout:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .min-order-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+        
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -20px);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cart {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .cart-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+            }
+            
+            .restaurant-details {
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .item-name {
+                font-size: 14px;
+            }
+            
+            .item-price {
+                font-size: 13px;
+            }
+            
+            .cart-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-left">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <span class="logo-text">Yemeksepeti</span>
+                </div>
+                <div class="address-section" onclick="openAddressModal()">
+                    <svg class="location-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#697488"/>
+                    </svg>
+                    <span class="address-text" id="selectedAddress">Adres seçin veya girin</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-menu" id="userMenu">
+                    <button class="user-menu-button" onclick="toggleUserMenu(event)">
+                        <svg class="user-icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="#697488">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        <span id="userName" class="user-name">Kullanıcı</span>
+                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="#697488">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </button>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-item" onclick="window.location.href='/customer/pages/wallet.php'">
+                            <span class="dropdown-item-icon">📁</span>
+                            <span>Cüzdan</span>
+                        </div>
+                        <div class="user-dropdown-item" onclick="window.location.href='/customer/pages/orders.php'">
+                            <span class="dropdown-item-icon">📋</span>
+                            <span>Önceki Siparişlerim</span>
+                        </div>
+                        <div class="user-dropdown-item" onclick="window.location.href='/customer/pages/profile.php'">
+                            <span class="dropdown-item-icon">👤</span>
+                            <span>Hesabım</span>
+                        </div>
+                        <div class="user-dropdown-item" onclick="window.location.href='/customer/pages/coupons.php'">
+                            <span class="dropdown-item-icon">🎟️</span>
+                            <span>Kuponlarım</span>
+                        </div>
+                        <div class="user-dropdown-item" onclick="window.location.href='/customer/pages/help.php'">
+                            <span class="dropdown-item-icon">❓</span>
+                            <span>Yardım Merkezi</span>
+                        </div>
+                        <div class="user-dropdown-item" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Çıkış yap</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="icon-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#697488">
+                        <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+                    </svg>
+                </button>
+                
+                <button class="icon-button" onclick="window.location.href='/customer/pages/favorites.php'" title="Favorilerim">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#697488">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </button>
+                
+                <button class="icon-button" id="cartToggle" onclick="toggleCart()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#697488">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div id="restaurantHeader" class="restaurant-header">
+                <div class="loading">Restoran bilgileri yükleniyor...</div>
+            </div>
+
+            <div id="menuTabs" class="menu-tabs">
+                <!-- Category tabs will be inserted here -->
+            </div>
+
+            <div class="menu-search-container" style="margin-bottom: 20px;">
+                <input type="text" id="menuSearchInput" placeholder="🔍 Menüde Ara" style="width: 100%; padding: 12px 20px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='#ff2d55'" onblur="this.style.borderColor='#e0e0e0'" oninput="searchMenuItems(this.value)">
+            </div>
+
+            <div id="notFoundMessage" class="loading" style="display: none; padding: 20px; text-align: center;">
+                
+            </div>
+
+            <div id="menuContent">
+                <div class="loading">Menü yükleniyor...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Address Modal -->
+    <div id="addressModal" class="address-modal">
+        <div class="address-modal-overlay" onclick="closeAddressModal()"></div>
+        <div class="address-modal-content">
+            <div class="address-modal-header">
+                <h2>Adres Seçin</h2>
+                <button class="address-modal-close" onclick="closeAddressModal()">✕</button>
+            </div>
+            <div class="address-modal-body">
+                <div class="address-search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#697488">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="addressInput" 
+                        placeholder="Adres, mahalle veya sokak adı girin"
+                        onkeyup="handleAddressSearch(event)"
+                    >
+                </div>
+                <div class="address-suggestions" id="addressSuggestions">
+                    <!-- Örnek adresler -->
+                    <div class="address-suggestion-item" onclick="selectAddress('Kadıköy, İstanbul')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#697488">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <div>
+                            <div class="suggestion-title">Kadıköy</div>
+                            <div class="suggestion-subtitle">İstanbul</div>
+                        </div>
+                    </div>
+                    <div class="address-suggestion-item" onclick="selectAddress('Beşiktaş, İstanbul')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#697488">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <div>
+                            <div class="suggestion-title">Beşiktaş</div>
+                            <div class="suggestion-subtitle">İstanbul</div>
+                        </div>
+                    </div>
+                    <div class="address-suggestion-item" onclick="selectAddress('Şişli, İstanbul')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#697488">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <div>
+                            <div class="suggestion-title">Şişli</div>
+                            <div class="suggestion-subtitle">İstanbul</div>
+                        </div>
+                    </div>
+                    <div class="address-suggestion-item" onclick="selectAddress('Beyoğlu, İstanbul')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#697488">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <div>
+                            <div class="suggestion-title">Beyoğlu</div>
+                            <div class="suggestion-subtitle">İstanbul</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="paymentModal" class="payment-modal">
+        <div class="address-modal-overlay" onclick="closePaymentModal()"></div>
+        <div class="payment-modal-content">
+            <div class="payment-modal-header">
+                <h2>Ödeme Yöntemi</h2>
+                <button class="address-modal-close" onclick="closePaymentModal()">✕</button>
+            </div>
+            <div class="payment-modal-body">
+                <!-- Saved Cards Section -->
+                <div id="savedCardsSection" class="saved-cards" style="display: none;">
+                    <h3 style="font-size: 16px; margin-bottom: 12px; color: #292929;">Kayıtlı Kartlarım</h3>
+                    <div id="savedCardsList"></div>
+                    <button class="add-new-card" onclick="showNewCardForm()">
+                        <span style="font-size: 24px; font-weight: 300;">+</span> Yeni Kart Ekle
+                    </button>
+                </div>
+
+                <div class="payment-method" onclick="selectPaymentMethod('credit')">
+                    <input type="radio" name="payment" id="creditCard" value="credit">
+                    <label for="creditCard" style="cursor: pointer; margin: 0;">💳 Kredi Kartı</label>
+                </div>
+                
+                <div class="payment-method" onclick="selectPaymentMethod('debit')">
+                    <input type="radio" name="payment" id="debitCard" value="debit">
+                    <label for="debitCard" style="cursor: pointer; margin: 0;">💳 Banka Kartı</label>
+                </div>
+                
+                <div class="payment-method" onclick="selectPaymentMethod('cash')">
+                    <input type="radio" name="payment" id="cashPayment" value="cash">
+                    <label for="cashPayment" style="cursor: pointer; margin: 0;">💵 Kapıda Ödeme</label>
+                </div>
+                
+                <div id="cardForm" class="payment-form">
+                    <div class="form-group">
+                        <label>Kart Üzerindeki İsim</label>
+                        <input type="text" id="cardName" placeholder="Ad Soyad" required oninput="checkNewCardEntry()">
+                    </div>
+                    <div class="form-group">
+                        <label>Kart Numarası</label>
+                        <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required oninput="formatCardNumber(); checkNewCardEntry()">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Son Kullanma Tarihi</label>
+                            <input type="text" id="cardExpiry" placeholder="AA/YY" maxlength="5" required oninput="formatExpiry(); checkNewCardEntry()">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="text" id="cardCvv" placeholder="000" maxlength="3" required oninput="this.value = this.value.replace(/\D/g, '').substring(0, 3); checkNewCardEntry()">
+                        </div>
+                    </div>
+
+                    <!-- Save Card Options -->
+                    <div id="saveCardOptions" class="save-card-option" style="display: none;">
+                        <p style="font-size: 14px; margin-bottom: 12px; color: #292929;">Kart bilgileriniz kaydedilsin mi?</p>
+                        <div class="save-options">
+                            <button class="save-option-btn save-yes" onclick="setSaveCardChoice('save')">Kaydet</button>
+                            <button class="save-option-btn save-later" onclick="setSaveCardChoice('later')">Şimdi Değil</button>
+                            <button class="save-option-btn save-never" onclick="setSaveCardChoice('never')">Asla</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="cashForm" class="payment-form">
+                    <div class="pos-option">
+                        <input type="checkbox" id="posDevice">
+                        <label for="posDevice" style="cursor: pointer; margin: 0;">POS Cihazı İster Misiniz?</label>
+                    </div>
+                </div>
+                
+                <div class="payment-actions">
+                    <button class="btn-cancel" onclick="closePaymentModal()">İptal</button>
+                    <button class="btn-confirm" onclick="confirmPayment()">Siparişi Tamamla</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
+    
+    <div id="cart" class="cart">
+        <div class="cart-header">
+            <div class="cart-title">🛒 Sepetim</div>
+            <button class="cart-close" onclick="toggleCart()">✕</button>
+        </div>
+        
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <div class="cart-empty-icon">🛒</div>
+                <div>Sepetiniz boş</div>
+            </div>
+        </div>
+        
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="min-order-warning" id="minOrderWarning" style="display: none;"></div>
+            <div class="cart-summary">
+                <div class="cart-summary-row">
+                    <span>Ara Toplam</span>
+                    <span id="cartSubtotal">0 ₺</span>
+                </div>
+                <div class="cart-summary-row">
+                    <span>Servis Ücreti</span>
+                    <span id="serviceFee">5.00 ₺</span>
+                </div>
+            </div>
+            <div class="cart-total">
+                <span>Toplam</span>
+                <span id="cartTotal">0 ₺</span>
+            </div>
+            <button class="cart-checkout" id="checkoutBtn" onclick="checkout()">Sipariş Ver</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Yemeksepeti - Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <script>
+        window.groupedMenus = null;
+        let restaurantId = null;
+        let cart = [];
+        let totalAmount = 0;
+        let restaurantData = null;
+        const SERVICE_FEE = 5.00;
+
+        /**
+         * Auth fonksiyonları - localStorage'dan kullanıcı kontrolü
+         */
+        function isLoggedIn() {
+            const user = localStorage.getItem('user');
+            if (!user || user === 'null' || user === 'undefined') return false;
+            try {
+                const parsed = JSON.parse(user);
+                return parsed && (parsed.UserID || parsed.userId);
+            } catch (e) {
+                console.error('localStorage parse error:', e);
+                return false;
+            }
+        }
+        
+        function getUser() {
+            if (!isLoggedIn()) return null;
+            try {
+                return JSON.parse(localStorage.getItem('user'));
+            } catch (e) {
+                return null;
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('cart');
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/backend/logout.php';
+        }
+
+        /**
+         * Adres Modal Fonksiyonları
+         */
+        function openAddressModal() {
+            const modal = document.getElementById('addressModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Input'a focus
+            setTimeout(() => {
+                document.getElementById('addressInput').focus();
+            }, 100);
+        }
+        
+        function closeAddressModal() {
+            const modal = document.getElementById('addressModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Input'u temizle
+            document.getElementById('addressInput').value = '';
+        }
+        
+        function selectAddress(address) {
+            // Seçilen adresi header'da göster
+            document.getElementById('selectedAddress').textContent = address;
+            
+            // localStorage'a kaydet
+            localStorage.setItem('selectedAddress', address);
+            
+            // Modal'ı kapat
+            closeAddressModal();
+            
+            // Mesaj göster
+            showNotification('📍 Adres seçildi: ' + address);
+            
+                // Burada backend'e istek atılıp adrese göre restoranlar filtrelenebilir
+            // Şimdilik sadece bildiri gösteriyoruz
+        }
+        
+        // *** TAVUK DÖNER GÖRSEL EŞLEŞTİRME FONKSİYONU ***
+        function getTavukDonerImage(itemName) {
+            // Türkçe karakter temizleme ve normalize
+            const normalized = itemName
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/ı/g, 'i')
+                .replace(/ğ/g, 'g')
+                .replace(/ü/g, 'u')
+                .replace(/ş/g, 's')
+                .replace(/ö/g, 'o')
+                .replace(/ç/g, 'c')
+                .trim();
+            
+            // ÖZEL DURUMLAR - En spesifikten genele doğru
+            if (normalized.includes('aci') && normalized.includes('tavuk')) {
+                return 'images/acitavukmenu.jpg';
+            }
+            if (normalized.includes('gyro') && normalized.includes('tavuk')) {
+                return 'images/gyrotavukmenu.jpg';
+            }
+            if (normalized.includes('tombik') && normalized.includes('tavuk')) {
+                return 'images/tombiktavukmenu.jpg';
+            }
+            if (normalized.includes('80') && normalized.includes('gr') && normalized.includes('tavuk')) {
+                return 'images/tavukmenu.jpg';
+            }
+            
+            // Hiçbiri eşleşmezse null dön
+            return null;
+        }
+        
+        // Menüleri kategoriye göre grupla
+        function buildGroupedMenus(menuItems, categoryMap) {
+          const groups = {};
+
+          menuItems.forEach(item => {
+            const catId = String(item.CategoryID);
+            const catName = categoryMap[catId];
+
+            if (!catName) {
+              console.warn('Kategori bulunamadı:', catId, item);
+              return;
+            }
+
+            if (!groups[catId]) {
+              groups[catId] = {
+                id: catId,
+                name: catName,
+                items: []
+              };
+            }
+
+            groups[catId].items.push(item);
+          });
+
+          return groups;
+        }
+        
+        // Menüleri doğru şekilde render et (CategoryID bazlı)
+        function renderMenus(groupedMenus, selectedCategoryId = 'all') {
+                    const container = document.getElementById('menuContent');
+                    container.innerHTML = '';
+
+                    Object.values(groupedMenus).forEach(category => {
+                        // Debug: Kategori ve ürün sayısı
+                        console.log('Kategori:', category.name, 'ID:', category.id, 'Ürün sayısı:', category.items.length);
+
+                        if (selectedCategoryId !== 'all' &&
+                                String(category.id) !== String(selectedCategoryId)) {
+                            return;
+                        }
+
+                        // KATEGORİ BAŞLIĞI
+                        const section = document.createElement('div');
+                        section.className = 'menu-section';
+                        section.dataset.categoryId = category.id;
+
+                        const title = document.createElement('h2');
+                        title.className = 'section-title';
+                        title.textContent = category.name;
+                        section.appendChild(title);
+
+                        const grid = document.createElement('div');
+                        grid.className = 'menu-grid';
+
+                        category.items.forEach(item => {
+                            // Debug: Eklenen ürün
+                            console.log('Eklenen ürün:', item.Name, 'KategoriID:', item.CategoryID);
+                            grid.innerHTML += renderMenuItemCard(item);
+                        });
+
+                        section.appendChild(grid);
+                        container.appendChild(section);
+                    });
+        }
+        
+
+                // Kategoriye göre filtrele (CategoryID bazlı - Event Delegation)
+                document.addEventListener('click', function (e) {
+                        const btn = e.target.closest('.menu-tab.category-btn');
+                        if (!btn) return;
+
+                        document.querySelectorAll('.menu-tab.category-btn')
+                                .forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+
+                        const selectedCategoryId = btn.dataset.categoryId;
+                        currentCategory = selectedCategoryId;
+                        console.log('SEÇİLEN KATEGORİ:', selectedCategoryId);
+                        renderMenus(window.groupedMenus, selectedCategoryId);
+                });
+        
+        // *** TEK MERKEZİ KART RENDER FONKSİYONU ***
+        function renderMenuItemCard(item) {
+            // 🛡️ NULL-SAFE VERİ ÇEKME
+            const name = (item.Name || '').trim();
+            const description = (item.Description || '').trim();
+            const price = item.Price ?? 0;
+            const categoryName = (item.CategoryName || item.Category || '').trim();
+            const menuItemId = item.MenuItemID || 0;
+            const isAvailable = item.IsAvailable ?? 1;
+            
+            // Escape for HTML attributes
+            const itemName = name.replace(/'/g, "\\'");
+            const itemNameLower = name
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/ı/g, 'i')
+                .replace(/ğ/g, 'g')
+                .replace(/ü/g, 'u')
+                .replace(/ş/g, 's')
+                .replace(/ö/g, 'o')
+                .replace(/ç/g, 'c');
+            
+            // 🖼️ GÖRSEL YÖNETİMİ - NULL-SAFE
+            let imageUrl = '/frontend/images/default-food.jpg'; // Default görsel
+            
+            if (item.ImageURL && item.ImageURL.trim() !== '') {
+                // Database'den gelen görsel varsa
+                const dbImage = item.ImageURL.trim();
+                imageUrl = dbImage.startsWith('/') ? dbImage : '/' + dbImage;
+            } else {
+                // FALLBACK: İsim bazlı görsel seçimi
+                
+                // BURGER - Önce en spesifik burger isimleri (uzundan kısaya)
+                if (itemNameLower.includes('musqa rich burger') || (itemNameLower.includes('musqa') && itemNameLower.includes('rich'))) {
+                    imageUrl = 'images/musqarichburger.jpg';
+                } else if (itemNameLower.includes('tripple boss burger') || itemNameLower.includes('tripple boss')) {
+                    imageUrl = 'images/tripplebossburger.jpg';
+                } else if (itemNameLower.includes('five boss burger') || itemNameLower.includes('five boss')) {
+                    imageUrl = 'images/fivebossburger.jpg';
+                } else if (itemNameLower.includes('big bang burger') || itemNameLower.includes('big bang')) {
+                    imageUrl = 'images/bigbangburger.jpg';
+                } else if (itemNameLower.includes('big boss burger') || itemNameLower.includes('big boss')) {
+                    imageUrl = 'images/bigbossburger.jpg';
+                } else if (itemNameLower.includes('musqa chicken burger') || (itemNameLower.includes('musqa') && itemNameLower.includes('chicken'))) {
+                    imageUrl = 'images/musqachickenburger.jpg';
+                } else if (itemNameLower.includes('musqa burger') && !itemNameLower.includes('rich') && !itemNameLower.includes('mini')) {
+                    imageUrl = 'images/musqaburger.jpg';
+                } else if (itemNameLower.includes('dejavu burger') || itemNameLower.includes('dejavu')) {
+                    imageUrl = 'images/dejavuburger.jpg';
+                } 
+                // ÇOCUK MENÜLERİ
+                else if (itemNameLower.includes('musqa mini cheese') || (itemNameLower.includes('musqa') && itemNameLower.includes('mini') && itemNameLower.includes('cheese'))) {
+                    imageUrl = 'images/musqaminicheese.jpg';
+                } else if (itemNameLower.includes('musqa mini tavuk') || (itemNameLower.includes('musqa') && itemNameLower.includes('mini') && itemNameLower.includes('tavuk'))) {
+                    imageUrl = 'images/musqaminitavuk.jpg';
+                } else if (itemNameLower.includes('musqa mini') && !itemNameLower.includes('cheese') && !itemNameLower.includes('tavuk')) {
+                    imageUrl = 'images/musqamini.jpg';
+                }
+                // SANDVİÇLER
+                else if (itemNameLower.includes('cheddarli') && itemNameLower.includes('kumru')) {
+                    imageUrl = 'images/musqacsandviç.jpg';
+                } else if (itemNameLower.includes('musqa') && itemNameLower.includes('kumru')) {
+                    imageUrl = 'images/musqakumru.jpg';
+                }
+                // TACOLAR
+                else if (itemNameLower.includes('musqa taco')) {
+                    imageUrl = 'images/musqataco.jpg';
+                } else if (itemNameLower.includes('mexico taco')) {
+                    imageUrl = 'images/mexicotaco.jpg';
+                } else if (itemNameLower.includes('taco')) {
+                    imageUrl = 'images/taco.jpg';
+                }
+                // GENEL BURGER
+                else if (itemNameLower.includes('cheeseburger')) {
+                    imageUrl = 'images/cheeseburger.jpg';
+                } else if (itemNameLower.includes('burger') || itemNameLower.includes('hamburger')) {
+                    imageUrl = 'images/burger.jpg';
+                }
+                // İÇECEKLER
+                else if (itemNameLower.includes('coca-cola zero sugar') || (itemNameLower.includes('coca') && itemNameLower.includes('zero'))) {
+                    imageUrl = 'images/zero.jpg';
+                } else if (itemNameLower.includes('coca-cola sekersiz') || (itemNameLower.includes('coca') && itemNameLower.includes('sekersiz'))) {
+                    imageUrl = 'images/sekersiz.jpg';
+                } else if (itemNameLower.includes('coca-cola') && itemNameLower.includes('33 cl')) {
+                    imageUrl = 'images/teneke.jpg';
+                } else if (itemNameLower.includes('coca-cola') || itemNameLower.includes('coca cola')) {
+                    imageUrl = 'images/cocacola.jpg';
+                } else if (itemNameLower.includes('fanta')) {
+                    imageUrl = 'images/fanta.jpg';
+                } else if (itemNameLower.includes('sprite')) {
+                    imageUrl = 'images/sprite.jpg';
+                } else if (itemNameLower.includes('cappy')) {
+                    imageUrl = 'images/cappy.jpg';
+                } else if (itemNameLower.includes('cola') || itemNameLower.includes('kola')) {
+                    imageUrl = 'images/kola.jpg';
+                }
+                // ATIŞTIRMALIKLAR
+                else if (itemNameLower.includes('cheddar') && itemNameLower.includes('patates')) {
+                    imageUrl = 'images/cpatateskizartmasi.jpg';
+                } else if (itemNameLower.includes('patates kizartmasi') || (itemNameLower.includes('patates') && itemNameLower.includes('kizartma'))) {
+                    imageUrl = 'images/patateskizartmasi.jpg';
+                } else if (itemNameLower.includes('patates') || itemNameLower.includes('fries')) {
+                    imageUrl = 'images/patates.jpg';
+                } else if (itemNameLower.includes('tavuk nugget') || itemNameLower.includes('nugget')) {
+                    imageUrl = 'images/tavuknugget.jpg';
+                } else if (itemNameLower.includes('sogan') && itemNameLower.includes('halka')) {
+                    imageUrl = 'images/soganhalkasi.jpg';
+                } else if (itemNameLower.includes('mozzarella') && itemNameLower.includes('stick')) {
+                    imageUrl = 'images/mozzarellasticks.jpg';
+                }
+                // KEBAP & TÜRK YEMEKLERİ
+                else if (itemNameLower.includes('iskender')) {
+                    imageUrl = 'images/iskender.jpg';
+                } else if (itemNameLower.includes('adana')) {
+                    imageUrl = 'images/adana.jpg';
+                } else if (itemNameLower.includes('urfa')) {
+                    imageUrl = 'images/urfa.jpg';
+                } else if (itemNameLower.includes('beyti')) {
+                    imageUrl = 'images/beyti.jpg';
+                } else if (itemNameLower.includes('sis')) {
+                    imageUrl = 'images/sis-kebap.jpg';
+                } else if (itemNameLower.includes('kebap') || itemNameLower.includes('kebab')) {
+                    imageUrl = 'images/kebap.jpg';
+                } else if (itemNameLower.includes('kofte')) {
+                    imageUrl = 'images/kofte.jpg';
+                } else if (itemNameLower.includes('lahmacun')) {
+                    imageUrl = 'images/lahmacun.jpg';
+                } else if (itemNameLower.includes('pide')) {
+                    imageUrl = 'images/pide.jpg';
+                }
+                // SUSHI
+                else if (itemNameLower.includes('california') && itemNameLower.includes('roll')) {
+                    imageUrl = 'images/california-roll.jpg';
+                } else if (itemNameLower.includes('salmon') || itemNameLower.includes('somon')) {
+                    imageUrl = 'images/salmon-sushi.jpg';
+                } else if (itemNameLower.includes('sushi') || itemNameLower.includes('maki') || itemNameLower.includes('roll')) {
+                    imageUrl = 'images/sushi.jpg';
+                }
+                // DİĞER KATEGORILER
+                else if (itemNameLower.includes('pizza')) {
+                    imageUrl = 'images/pizza.jpg';
+                }
+                // DİĞER ANA YEMEKLER
+                else if (itemNameLower.includes('makarna') || itemNameLower.includes('spagetti') || (itemNameLower.includes('pasta') && !categoryLower.includes('tatli'))) {
+                    imageUrl = 'images/makarna.jpg';
+                } else if (itemNameLower.includes('salata') || itemNameLower.includes('salad')) {
+                    imageUrl = 'images/salata.jpg';
+                } else if (itemNameLower.includes('corba') || itemNameLower.includes('soup')) {
+                    imageUrl = 'images/corba.jpg';
+                } else if (itemNameLower.includes('tavuk') || itemNameLower.includes('chicken') || itemNameLower.includes('wings')) {
+                    imageUrl = 'images/tavuk.jpg';
+                } else if (itemNameLower.includes('balik') || itemNameLower.includes('fish') || itemNameLower.includes('levrek')) {
+                    imageUrl = 'images/balik.jpg';
+                } else if (itemNameLower.includes('pilav') || itemNameLower.includes('rice')) {
+                    imageUrl = 'images/pilav.jpg';
+                } else if (itemNameLower.includes('wrap') || itemNameLower.includes('durum')) {
+                    imageUrl = 'images/wrap.jpg';
+                }
+            }
+            
+            // 🛡️ NULL-SAFE HTML RENDER
+            return `
+                <div class="menu-card ${isAvailable == 0 ? 'out-of-stock' : ''}" data-category-id="${item.CategoryID || ''}">
+                    <div class="menu-card-left">
+                        <h3 class="menu-title">${name || 'İsimsiz Ürün'}</h3>
+                        <div class="menu-price">
+                            <span class="price-current">₺${parseFloat(price).toFixed(2)}</span>
+                        </div>
+                        <p class="menu-desc">${description || ''}</p>
+                        ${categoryName ? `<span class="menu-tag">${categoryName}</span>` : ''}
+                        ${isAvailable == 0 ? '<span class="stok-yok">Tükendi</span>' : ''}
+                    </div>
+                    <div class="menu-card-right">
+                        <img src="${imageUrl}" alt="${name}" loading="lazy" onerror="this.src='/frontend/images/default-food.jpg'" />
+                        ${isAvailable == 1 
+                            ? `<button class="add-btn" onclick="addToCart(${menuItemId}, '${itemName}', ${price}, 100, ${isAvailable})">+</button>`
+                            : `<button class="add-btn disabled" disabled>+</button>`
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        // Menüde arama fonksiyonu
+        function searchMenuItems(query) {
+            if (!query || query.trim() === '') {
+                // Arama boşsa tüm menüyü göster
+                renderMenus(window.groupedMenus, 'all');
+                return;
+            }
+
+            const searchTerm = query.toLowerCase().trim();
+            // Filtrelenmiş ürünleri grupla
+            const filtered = allMenuItems.filter(item => {
+                const itemName = (item.Name || '').toLowerCase();
+                const itemDescription = (item.Description || '').toLowerCase();
+                const itemCategory = (item.Category || '').toLowerCase();
+                return itemName.includes(searchTerm) || 
+                       itemDescription.includes(searchTerm) || 
+                       itemCategory.includes(searchTerm);
+            });
+
+            // Kategorilere göre grupla
+            const categoryMap = {};
+            Object.values(groupedMenus).forEach(cat => {
+                categoryMap[String(cat.id)] = cat.name;
+            });
+            const filteredGroups = buildGroupedMenus(filtered, categoryMap);
+
+            const menuContentEl = document.getElementById('menuContent');
+            if (filtered.length > 0) {
+                window.groupedMenus = filteredGroups;
+                renderMenus(window.groupedMenus, 'all');
+            } else {
+                menuContentEl.innerHTML = '<div class="loading">🔍 Arama sonucu bulunamadı.</div>';
+            }
+        }
+        
+        function handleAddressSearch(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            
+            if (searchTerm.length > 0) {
+                // Enter tuşuna basılırsa doğrudan seç
+                if (event.key === 'Enter' && searchTerm.trim()) {
+                    selectAddress(searchTerm.trim());
+                }
+            }
+        }
+        
+        function showNotification(message) {
+            // Basit bir bildirim göster
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 90px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #1d1d1f;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 3000;
+                animation: slideDown 0.3s, fadeOut 0.3s 2.5s;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Sayfa yüklendiğinde kaydedilmiş adresi göster
+        function loadSavedAddress() {
+            const savedAddress = localStorage.getItem('selectedAddress');
+            if (savedAddress) {
+                document.getElementById('selectedAddress').textContent = savedAddress;
+            }
+        }
+
+        // Kullanıcı menüsünü aç/kapat
+        function toggleUserMenu(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('userMenu');
+            menu.classList.toggle('active');
+        }
+        
+        // Menü dışına tıklandığında kapat
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('userMenu');
+            if (menu && !menu.contains(event.target)) {
+                menu.classList.remove('active');
+            }
+        });
+        
+        // Kullanıcı adını güncelle
+        function updateUserName() {
+            const user = getUser();
+            const userNameEl = document.getElementById('userName');
+            if (user && (user.FullName || user.fullName)) {
+                userNameEl.textContent = user.FullName || user.fullName;
+            } else if (user && (user.Email || user.email)) {
+                userNameEl.textContent = (user.Email || user.email).split('@')[0];
+            } else {
+                userNameEl.textContent = 'Misafir';
+            }
+        }
+
+        // Sayfa yüklendiğinde
+        window.onload = function() {
+            // URL'den restoran ID'sini al
+            const urlParams = new URLSearchParams(window.location.search);
+            restaurantId = urlParams.get('id');
+            
+            console.log('🔍 URL Parameters:', window.location.search);
+            console.log('🔍 Restaurant ID:', restaurantId);
+            console.log('🔍 Restaurant ID Type:', typeof restaurantId);
+            
+            if (!restaurantId) {
+                document.getElementById('restaurantHeader').innerHTML = 
+                    '<div class="error">Restoran bulunamadı!</div>';
+                return;
+            }
+            
+            // LocalStorage'dan sepeti yükle
+            loadCartFromStorage();
+            
+            // Kullanıcı adını güncelle
+            updateUserName();
+            
+            // Kaydedilmiş adresi yükle
+            loadSavedAddress();
+            
+            loadRestaurantInfo();
+            loadMenu();
+        };
+
+        // Restoran bilgilerini yükle
+        function loadRestaurantInfo() {
+            fetch(`/backend/restaurants.php?id=${restaurantId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Restoran bulunamadı');
+                    }
+                    return response.json();
+                })
+                .then(restaurant => {
+                    console.log('Restaurant data:', restaurant); // Debug
+                    console.log('ImageURL:', restaurant.ImageURL); // Debug
+                    if (restaurant && restaurant.RestaurantID) {
+                        restaurantData = restaurant;
+                        displayRestaurantInfo(restaurant);
+                        updateCart(); // Min order kontrolü için
+                    } else if (restaurant && restaurant.error) {
+                        document.getElementById('restaurantHeader').innerHTML = 
+                            `<div class="error">Hata: ${restaurant.error}</div>`;
+                        console.error('API Error:', restaurant);
+                    } else {
+                        document.getElementById('restaurantHeader').innerHTML = 
+                            '<div class="error">Restoran bilgileri yüklenemedi!</div>';
+                        console.error('Invalid restaurant data:', restaurant);
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    document.getElementById('restaurantHeader').innerHTML = 
+                        `<div class="error">Sunucu hatası! ${error.message}</div>`;
+                });
+        }
+
+        // Restoran bilgilerini göster
+        function displayRestaurantInfo(restaurant) {
+            const isFavorite = checkIfFavorite(restaurant.RestaurantID);
+            const rating = restaurant.Rating || 4.5;
+            const reviewCount = restaurant.ReviewCount || '1000+';
+            
+            // Görsel yolu düzeltme
+            let imageUrl = restaurant.ImageURL || 'yemek.jpg';
+            // Restoran ismine göre özel görsel atama (ana sayfadakiyle aynı mantık)
+            if (restaurant.Name) {
+                const name = restaurant.Name.toLowerCase();
+                if (name.includes('musqa') && name.includes('mng')) {
+                    imageUrl = 'musqamng.jpg';
+                } else if (name.includes('musqa') && name.includes('gez')) {
+                    imageUrl = 'musqagez.jpg';
+                } else if (name.includes('burger king')) {
+                    imageUrl = 'burger.jpg';
+                } else if (name.includes('günaydın') && name.includes('balık')) {
+                    imageUrl = 'balik.jpg';
+                } else if (name.includes('komagene')) {
+                    imageUrl = 'komagene.jpg';
+                } else if (name.includes('usta') && name.includes('dönerci')) {
+                    imageUrl = 'ustadonerci.jpg';
+                } else if (name.includes('beyzade') && name.includes('mantı')) {
+                    imageUrl = 'beyzademanti.jpg';
+                } else if (name.includes('starbucks')) {
+                    imageUrl = 'starbucks.jpg';
+                } else if (name.includes('sariyer') && name.includes('börek')) {
+                    imageUrl = 'sariyerborekcisi.jpg';
+                } else if ((name.includes("domino's") || name.includes('dominos')) && name.includes('pizza')) {
+                    imageUrl = 'dominospizza.jpg';
+                }
+                // Diğer özel restoran görselleri de buraya eklenebilir
+            }
+            // Tüm restoranlar için görsel yolu düzeltme
+            if (imageUrl && !imageUrl.startsWith('/frontend/images/') && !imageUrl.startsWith('http')) {
+                let imgName = imageUrl.replace(/^\/?images\//, '').replace(/^\//, '');
+                imageUrl = '/frontend/images/' + imgName;
+            }
+            
+            const html = `
+                <div class="restaurant-info-wrapper">
+                    <div class="restaurant-image-left">
+                        <img src="${imageUrl}?nocache=${Date.now()}" alt="${restaurant.Name}">
+                    </div>
+                    <div class="restaurant-info-content">
+                        <div class="restaurant-top-row">
+                            <div class="restaurant-main-info">
+                                <div class="restaurant-name">${restaurant.Name}</div>
+                                <div class="restaurant-category">🍴 ${restaurant.Category || 'Restoran'} · Restoran Teslimatlı</div>
+                                <div class="restaurant-badges">
+                                <div class="badge super-restaurant">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                    </svg>
+                                    Süper Restoran
+                                </div>
+                                <div class="badge rating">
+                                    <svg width="16" height="16" viewBox="0 0 24 24">
+                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                    </svg>
+                                    ${rating}/5
+                                </div>
+                                <div class="badge">
+                                    💬 ${reviewCount} Yorum
+                                </div>
+                            </div>
+                            ${restaurant.Description ? `<div class="restaurant-description">${restaurant.Description}</div>` : ''}
+                            <div class="restaurant-details">
+                                <div class="detail-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#666">
+                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                    </svg>
+                                    <span>${restaurant.Address && restaurant.Address.trim() !== '' ? restaurant.Address : 'Adres bilgisi yok'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#666">
+                                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                                    </svg>
+                                    <span>${restaurant.DeliveryTime || '30-45'} dk</span>
+                                </div>
+                                <div class="detail-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#666">
+                                        <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                                    </svg>
+                                    <span>Min. ${restaurant.MinOrderAmount || 0} ₺</span>
+                                </div>
+                                <div class="detail-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="${restaurant.IsOpen ? '#00a650' : '#ff2d55'}">
+                                        <circle cx="12" cy="12" r="8"/>
+                                    </svg>
+                                    <span style="color: ${restaurant.IsOpen ? '#00a650' : '#ff2d55'}; font-weight: 600;">
+                                        ${restaurant.IsOpen ? 'Açık' : 'Kapalı'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                            <button id="favoriteBtn" class="favorite-button ${isFavorite ? 'active' : ''}" onclick="toggleFavoriteAndUpdateBtn(${restaurant.RestaurantID})">
+                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none"/>
+                                </svg>
+                                <span style="color:${isFavorite ? '#292929' : '#ff2d55'};font-weight:600;">${isFavorite ? 'Favorilerde' : 'Favorilere Ekle'}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('restaurantHeader').innerHTML = html;
+            // Butonun durumunu güncelle (sayfa yüklendiğinde de doğru class olsun)
+            setTimeout(() => {
+                const btn = document.getElementById('favoriteBtn');
+                if (btn) {
+                    if (isFavorite) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                }
+            }, 100);
+                // Favori butonunu güncelleyen fonksiyon (detay sayfası için)
+                function toggleFavoriteAndUpdateBtn(restaurantId) {
+                    toggleFavorite(restaurantId);
+                    setTimeout(() => {
+                        const btn = document.getElementById('favoriteBtn');
+                        if (btn) {
+                            const isFav = checkIfFavorite(restaurantId);
+                            if (isFav) btn.classList.add('active');
+                            else btn.classList.remove('active');
+                            const svg = btn.querySelector('svg path');
+                            if (svg) svg.setAttribute('fill', 'none');
+                            const span = btn.querySelector('span');
+                            if (span) {
+                                span.textContent = isFav ? 'Favorilerde' : 'Favorilere Ekle';
+                                span.style.color = isFav ? '#292929' : '#ff2d55';
+                            }
+                        }
+                    }, 50);
+                }
+                // Fonksiyonu global scope'a ekle
+                window.toggleFavoriteAndUpdateBtn = toggleFavoriteAndUpdateBtn;
+        }
+
+        // Menüyü yükle
+        function loadMenu() {
+            console.log('🔄 loadMenu başladı, restaurantId:', restaurantId);
+            
+            // Kategorileri ve menüyü paralel yükle
+            Promise.all([
+                fetch(`/backend/get_menu_categories.php?restaurant_id=${restaurantId}`).then(res => res.json()),
+                fetch(`/backend/menu.php?id=${restaurantId}`).then(res => res.json())
+            ])
+            .then(([categories, menu]) => {
+                console.log('📋 Kategoriler:', categories);
+                console.log('📋 Menü:', menu);
+                
+                // Kategori butonlarını oluştur
+                const menuTabsEl = document.getElementById('menuTabs');
+                let tabsHtml = '<div class="menu-tab category-btn active" data-category-id="all">✨ Popüler</div>';
+                
+                categories.forEach(cat => {
+                    tabsHtml += `<div class="menu-tab category-btn" data-category-id="${cat.CategoryID}">${cat.CategoryName}</div>`;
+                });
+                
+                menuTabsEl.innerHTML = tabsHtml;
+                menuTabsEl.style.display = 'flex';
+                
+                // Kategoriler array -> hızlı lookup map
+                const categoryMap = {};
+                categories.forEach(cat => {
+                  categoryMap[String(cat.CategoryID)] = cat.CategoryName;
+                });
+                console.log('🗺️ Category Map:', categoryMap);
+                
+                // Menüyü göster - YENİ SİSTEM
+                allMenuItems = menu;
+                console.log('🔍 DEBUG - İlk menü item:', menu[0]);
+                console.log('🔍 DEBUG - CategoryID:', menu[0]?.CategoryID);
+                console.log('�️ Category Map:', categoryMap);
+                groupedMenus = buildGroupedMenus(menu, categoryMap);
+                console.log('🔍 DEBUG - Gruplar:', groupedMenus);
+                window.groupedMenus = buildGroupedMenus(menu, categoryMap);
+                renderMenus(window.groupedMenus, 'all');
+            })
+            .catch(err => {
+                console.error('❌ Yükleme Hatası:', err);
+                document.getElementById('menuContent').innerHTML = 
+                    '<div class="error">Menü yüklenirken hata oluştu.</div>';
+            });
+        }
+
+        // Favori yönetimi
+        function checkIfFavorite(restaurantId) {
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            return favorites.includes(parseInt(restaurantId));
+        }
+        
+        function toggleFavorite(restaurantId) {
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const id = parseInt(restaurantId);
+            const index = favorites.indexOf(id);
+            let action = '';
+            if (index > -1) {
+                favorites.splice(index, 1);
+                action = 'remove';
+            } else {
+                favorites.push(id);
+                action = 'add';
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+
+            // Veritabanını da güncelle
+            fetch('/backend/toggle_favorite.php', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `restaurant_id=${id}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.action === 'added') {
+                        showNotification('❤️ Favorilere eklendi');
+                    } else if (data.action === 'removed') {
+                        showNotification('💔 Favorilerden çıkarıldı');
+                    }
+                } else {
+                    showNotification('⚠️ Favori güncellenemedi');
+                }
+            })
+            .catch(() => {
+                showNotification('⚠️ Favori güncellenemedi');
+            });
+
+            // Butonu güncelle
+            const btn = document.querySelector('.favorite-button');
+            if (btn) {
+                btn.classList.toggle('active');
+                const svg = btn.querySelector('svg');
+                if (svg) {
+                    svg.setAttribute('fill', btn.classList.contains('active') ? 'white' : 'none');
+                }
+            }
+        }
+        
+        let allMenuItems = [];
+        let groupedMenus = {};
+        let currentCategory = 'all';
+        
+        // ESKİ RENDER - GEÇİCİ DEVRE DIŞI
+        /*
+        function displayMenu(menuItems) {
+            console.log('🎨 displayMenu çağrıldı, menuItems:', menuItems);
+            const container = document.getElementById('menuContent');
+            
+            // 🛡️ HATA KONTROL
+            if (menuItems && menuItems.error) {
+                console.error('❌ Menü hatası:', menuItems.error);
+                container.innerHTML = '<div class="error">' + menuItems.error + '</div>';
+                return;
+            }
+
+            if (!menuItems || menuItems.length === 0) {
+                console.warn('⚠️ Menü boş veya tanımsız');
+                container.innerHTML = '<div class="loading">Bu restoranda henüz menü bulunmamaktadır.</div>';
+                return;
+            }
+            
+            console.log('✅ Menü geçerli, item sayısı:', menuItems.length);
+            allMenuItems = menuItems;
+
+            // 🗂️ KATEGORİLERE GÖRE GRUPLA (NULL-SAFE)
+            const categories = {};
+            menuItems.forEach(item => {
+                // Kategori adını al - doğrudan kullan
+                const category = (item.Category || 'Diğer').toString().trim();
+                
+                if (!categories[category]) {
+                    categories[category] = [];
+                }
+                categories[category].push(item);
+            });
+
+            // Arama kutusunu göster
+            document.querySelector('.menu-search-container').style.display = 'block';
+            
+            // Her kategori için HTML oluştur
+            let html = '';
+            for (const category in categories) {
+                html += `
+                    <div class="menu-section">
+                        <h2 class="section-title">${category}</h2>
+                        <div class="menu-grid">
+                `;
+
+                categories[category].forEach(item => {
+                    // TEK RENDER FONKSİYONU KULLANIMI
+                    html += renderMenuItemCard(item);
+                });
+
+                html += '</div></div>';
+            }
+
+            document.getElementById('menuContent').innerHTML = html;
+        }
+        */
+
+        // LocalStorage'dan sepeti yükle
+        function loadCartFromStorage() {
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart && savedCart !== 'null' && savedCart !== 'undefined') {
+                try {
+                    const parsed = JSON.parse(savedCart);
+                    if (Array.isArray(parsed)) {
+                        cart = parsed;
+                    }
+                } catch (e) {
+                    console.error('Cart load error:', e);
+                    cart = [];
+                }
+            } else {
+                cart = [];
+            }
+            // Her durumda sepeti güncelle
+            updateCart();
+        }
+        
+        // Sepeti localStorage'a kaydet (artık updateCart() içinde çağrılıyor)
+        function saveCartToStorage() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+        
+        // Sepet toggle
+        function toggleCart() {
+            const cartEl = document.getElementById('cart');
+            const overlayEl = document.getElementById('cartOverlay');
+            cartEl.classList.toggle('active');
+            overlayEl.classList.toggle('active');
+        }
+        
+        // Sepetteki ürün miktarını al
+        function getItemQuantityInCart(menuItemId) {
+            const item = cart.find(item => item.menuItemId === menuItemId);
+            return item ? item.quantity : 0;
+        }
+        
+        // Sepete ekle
+        function addToCart(menuItemId, name, price, stock, isAvailable) {
+            // 🔒 EKSTRA GÜVENLİK: Menü verisinden kontrol et
+            const item = allMenuItems.find(m => m.MenuItemID == menuItemId);
+            if (!item || item.IsAvailable == 0) {
+                return; // Tükendi veya bulunamadı
+            }
+            
+            // ⛔ TÜKENDİ KONTROLÜ - HİÇBİR ŞEY YAPMA
+            if (isAvailable == 0) {
+                return;
+            }
+            
+            if (stock <= 0) {
+                return;
+            }
+            
+            const existingItem = cart.find(item => item.menuItemId === menuItemId);
+            
+            if (existingItem) {
+                if (existingItem.quantity >= stock) {
+                    alert('Stok miktarını aştınız!');
+                    return;
+                }
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    menuItemId: menuItemId,
+                    name: name,
+                    price: price,
+                    quantity: 1,
+                    restaurantId: restaurantId,
+                    restaurantName: restaurantData ? restaurantData.Name : 'Restoran'
+                });
+            }
+            
+            updateCart();
+            saveCartToStorage();
+            loadMenu();
+        }
+        
+        // Miktarı artır
+        function increaseQuantity(menuItemId, name, price, stock) {
+            const item = cart.find(item => item.menuItemId === menuItemId);
+            if (item) {
+                if (item.quantity >= stock) {
+                    alert('Stok miktarını aştınız!');
+                    return;
+                }
+                item.quantity++;
+                updateCart();
+                saveCartToStorage();
+                loadMenu();
+            }
+        }
+        
+        // Miktarı azalt
+        function decreaseQuantity(menuItemId) {
+            const item = cart.find(item => item.menuItemId === menuItemId);
+            if (item) {
+                item.quantity--;
+                if (item.quantity <= 0) {
+                    removeFromCart(menuItemId);
+                } else {
+                    updateCart();
+                    saveCartToStorage();
+                    loadMenu();
+                }
+            }
+        }
+        
+        // Sepetten çıkar
+        function removeFromCart(menuItemId) {
+            cart = cart.filter(item => item.menuItemId !== menuItemId);
+            updateCart();
+            saveCartToStorage();
+            loadMenu();
+        }
+
+        // Sepeti güncelle
+        function updateCart() {
+            const cartItemsEl = document.getElementById('cartItems');
+            const cartFooterEl = document.getElementById('cartFooter');
+            const minOrderWarningEl = document.getElementById('minOrderWarning');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            const cartBadge = document.getElementById('cartBadge');
+            
+            // Toplam miktarı hesapla
+            let itemCount = 0;
+            let subtotal = 0;
+            cart.forEach(item => {
+                itemCount += item.quantity;
+                subtotal += item.price * item.quantity;
+            });
+            
+            const total = subtotal + SERVICE_FEE;
+            totalAmount = total;
+            
+            // Badge güncelle
+            if (cartBadge) {
+                cartBadge.textContent = itemCount;
+                if (itemCount > 0) {
+                    cartBadge.style.display = 'flex';
+                } else {
+                    cartBadge.style.display = 'none';
+                }
+            }
+            
+            if (cart.length > 0) {
+                cartFooterEl.style.display = 'block';
+                
+                // Sepet içeriğini göster
+                let html = '';
+                cart.forEach(item => {
+                    html += `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-price">${item.price} ₺</div>
+                                <div class="cart-item-quantity">
+                                    <button class="cart-item-btn" onclick="decreaseQuantity(${item.menuItemId})">−</button>
+                                    <span>${item.quantity}</span>
+                                    <button class="cart-item-btn" onclick="increaseQuantity(${item.menuItemId}, '${item.name.replace(/'/g, "\\'") }', ${item.price}, 999)">+</button>
+                                </div>
+                            </div>
+                            <div class="cart-item-remove" onclick="removeFromCart(${item.menuItemId})" title="Sil">🗑️</div>
+                        </div>
+                    `;
+                });
+                cartItemsEl.innerHTML = html;
+                
+                // Özet güncelle
+                document.getElementById('cartSubtotal').textContent = subtotal.toFixed(2) + ' ₺';
+                document.getElementById('serviceFee').textContent = SERVICE_FEE.toFixed(2) + ' ₺';
+                document.getElementById('cartTotal').textContent = total.toFixed(2) + ' ₺';
+                
+                // Min sipariş kontrolü
+                if (restaurantData && subtotal < restaurantData.MinOrderAmount) {
+                    const remaining = (restaurantData.MinOrderAmount - subtotal).toFixed(2);
+                    minOrderWarningEl.style.display = 'block';
+                    minOrderWarningEl.innerHTML = `⚠️ <strong>Minimum sepet tutarı: ${restaurantData.MinOrderAmount} ₺</strong><br>Sipariş vermek için ${remaining} ₺ daha ürün eklemelisiniz`;
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.textContent = `🔒 Min. ${restaurantData.MinOrderAmount} ₺`;
+                    checkoutBtn.style.opacity = '0.6';
+                } else if (!isLoggedIn()) {
+                    minOrderWarningEl.style.display = 'block';
+                    minOrderWarningEl.innerHTML = `🔒 <strong>Sipariş vermek için <a href="login.html" style="color: #d71f4b; text-decoration: underline;">giriş yapmalısınız</a></strong>`;
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.textContent = '🔒 Giriş Yapın';
+                    checkoutBtn.style.opacity = '0.6';
+                } else {
+                    minOrderWarningEl.style.display = 'none';
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.textContent = 'Sipariş Ver';
+                    checkoutBtn.style.opacity = '1';
+                }
+                
+            } else {
+                cartFooterEl.style.display = 'none';
+                cartItemsEl.innerHTML = `
+                    <div class="cart-empty">
+                        <div class="cart-empty-icon">🛒</div>
+                    <div>Sepetiniz boş</div>
+                </div>
+            `;
+            }
+            
+            // Sepeti localStorage'a kaydet
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }        let selectedPaymentMethod = null;
+        let paymentDetails = {};
+        
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            
+            document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.payment-form').forEach(el => el.classList.remove('active'));
+            
+            if (method === 'credit' || method === 'debit') {
+                document.querySelector(`input[value="${method}"]`).closest('.payment-method').classList.add('selected');
+                document.querySelector(`input[value="${method}"]`).checked = true;
+                document.getElementById('cardForm').classList.add('active');
+            } else if (method === 'cash') {
+                document.querySelector(`input[value="cash"]`).closest('.payment-method').classList.add('selected');
+                document.querySelector(`input[value="cash"]`).checked = true;
+                document.getElementById('cashForm').classList.add('active');
+            }
+        }
+        
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+            document.body.style.overflow = '';
+            // Reset save card choice
+            currentSaveChoice = null;
+            document.getElementById('saveCardOptions').style.display = 'none';
+        }
+
+        // Saved Cards Management
+        let savedCards = [];
+        let selectedSavedCard = null;
+        let currentSaveChoice = null;
+        let isNewCardEntry = false;
+
+        function loadSavedCards() {
+            try {
+                const stored = localStorage.getItem('savedCards');
+                savedCards = stored ? JSON.parse(stored) : [];
+                
+                // Check if user has "never save" preference
+                const neverSave = localStorage.getItem('neverSaveCards');
+                
+                const savedCardsSection = document.getElementById('savedCardsSection');
+                const savedCardsList = document.getElementById('savedCardsList');
+                
+                if (savedCards.length > 0) {
+                    savedCardsSection.style.display = 'block';
+                    savedCardsList.innerHTML = '';
+                    
+                    savedCards.forEach(card => {
+                        const cardElement = document.createElement('div');
+                        cardElement.className = 'saved-card-item';
+                        cardElement.onclick = () => selectSavedCard(card.id);
+                        
+                        cardElement.innerHTML = `
+                            <input type="radio" name="savedCard" id="card_${card.id}" value="${card.id}">
+                            <div class="card-details">
+                                <div class="card-number-display">💳 **** **** **** ${card.last4Digits}</div>
+                                <div class="card-name-display">${card.cardName}</div>
+                            </div>
+                            <button class="delete-card" onclick="event.stopPropagation(); deleteCard('${card.id}')">🗑️</button>
+                        `;
+                        
+                        savedCardsList.appendChild(cardElement);
+                    });
+                } else {
+                    savedCardsSection.style.display = 'none';
+                }
+            } catch (e) {
+                console.error('Error loading saved cards:', e);
+                savedCards = [];
+            }
+        }
+
+        function selectSavedCard(cardId) {
+            selectedSavedCard = savedCards.find(c => c.id === cardId);
+            isNewCardEntry = false;
+            
+            // Update UI
+            document.querySelectorAll('.saved-card-item').forEach(el => el.classList.remove('selected'));
+            const selectedElement = document.querySelector(`#card_${cardId}`).closest('.saved-card-item');
+            selectedElement.classList.add('selected');
+            document.querySelector(`#card_${cardId}`).checked = true;
+            
+            // Hide payment method selection and card form
+            document.querySelectorAll('.payment-method').forEach(el => el.style.display = 'none');
+            document.getElementById('cardForm').classList.remove('active');
+            document.getElementById('saveCardOptions').style.display = 'none';
+            
+            // Set payment details
+            selectedPaymentMethod = 'credit';
+            paymentDetails = {
+                method: 'Kredi Kartı',
+                cardName: selectedSavedCard.cardName,
+                cardNumber: '*'.repeat(12) + selectedSavedCard.last4Digits,
+                cardExpiry: selectedSavedCard.expiry,
+                savedCard: true
+            };
+        }
+
+        function showNewCardForm() {
+            selectedSavedCard = null;
+            isNewCardEntry = false;
+            
+            // Deselect saved cards
+            document.querySelectorAll('.saved-card-item').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('input[name="savedCard"]').forEach(el => el.checked = false);
+            
+            // Show payment method selection
+            document.querySelectorAll('.payment-method').forEach(el => el.style.display = 'flex');
+            
+            // Clear card form
+            document.getElementById('cardName').value = '';
+            document.getElementById('cardNumber').value = '';
+            document.getElementById('cardExpiry').value = '';
+            document.getElementById('cardCvv').value = '';
+            
+            // Hide save options initially
+            document.getElementById('saveCardOptions').style.display = 'none';
+        }
+
+        function checkNewCardEntry() {
+            const cardName = document.getElementById('cardName').value.trim();
+            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const cardExpiry = document.getElementById('cardExpiry').value;
+            const cardCvv = document.getElementById('cardCvv').value;
+            
+            // Check if user previously selected "never save"
+            const neverSave = localStorage.getItem('neverSaveCards') === 'true';
+            
+            // Show save options if all fields are filled and user didn't select "never"
+            if (cardName && cardNumber.length === 16 && cardExpiry.length === 5 && cardCvv.length === 3) {
+                isNewCardEntry = true;
+                if (!neverSave && !currentSaveChoice) {
+                    document.getElementById('saveCardOptions').style.display = 'block';
+                }
+            } else {
+                isNewCardEntry = false;
+                if (!currentSaveChoice) {
+                    document.getElementById('saveCardOptions').style.display = 'none';
+                }
+            }
+        }
+
+        function setSaveCardChoice(choice) {
+            currentSaveChoice = choice;
+            
+            // Highlight selected button
+            document.querySelectorAll('.save-option-btn').forEach(btn => btn.classList.remove('selected'));
+            const selectedBtn = event.target;
+            selectedBtn.classList.add('selected');
+            
+            if (choice === 'never') {
+                localStorage.setItem('neverSaveCards', 'true');
+            } else if (choice === 'save') {
+                // Card will be saved when order is confirmed
+            }
+            // 'later' does nothing special, just dismisses the prompt
+        }
+
+        function saveNewCard() {
+            if (currentSaveChoice !== 'save') return;
+            
+            const cardName = document.getElementById('cardName').value.trim();
+            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const cardExpiry = document.getElementById('cardExpiry').value;
+            
+            const newCard = {
+                id: Date.now().toString(),
+                cardName: cardName,
+                last4Digits: cardNumber.slice(-4),
+                expiry: cardExpiry,
+                savedAt: new Date().toISOString()
+            };
+            
+            savedCards.push(newCard);
+            localStorage.setItem('savedCards', JSON.stringify(savedCards));
+            loadSavedCards();
+        }
+
+        function deleteCard(cardId) {
+            if (confirm('Bu kartı silmek istediğinizden emin misiniz?')) {
+                savedCards = savedCards.filter(c => c.id !== cardId);
+                localStorage.setItem('savedCards', JSON.stringify(savedCards));
+                loadSavedCards();
+            }
+        }
+        
+        function formatCardNumber() {
+            const input = document.getElementById('cardNumber');
+            if (!input) return;
+            let value = input.value.replace(/\s/g, '');
+            let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+            input.value = formatted;
+        }
+        
+        function formatExpiry() {
+            const input = document.getElementById('cardExpiry');
+            if (!input) return;
+            let value = input.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            input.value = value;
+        }
+        
+        function confirmPayment() {
+            // If a saved card is selected, payment details are already set
+            if (selectedSavedCard) {
+                // Save card if user chose to save it
+                if (isNewCardEntry && currentSaveChoice === 'save') {
+                    saveNewCard();
+                }
+                closePaymentModal();
+                submitOrder();
+                return;
+            }
+            
+            if (!selectedPaymentMethod) {
+                alert('Lütfen bir ödeme yöntemi seçin!');
+                return;
+            }
+            
+            if (selectedPaymentMethod === 'credit' || selectedPaymentMethod === 'debit') {
+                const cardName = document.getElementById('cardName').value.trim();
+                const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+                const cardExpiry = document.getElementById('cardExpiry').value;
+                const cardCvv = document.getElementById('cardCvv').value;
+                
+                if (!cardName || !cardNumber || !cardExpiry || !cardCvv) {
+                    alert('Lütfen tüm kart bilgilerini doldurun!');
+                    return;
+                }
+                
+                if (cardNumber.length !== 16) {
+                    alert('Geçerli bir kart numarası girin!');
+                    return;
+                }
+                
+                if (cardCvv.length !== 3) {
+                    alert('Geçerli bir CVV girin!');
+                    return;
+                }
+                
+                paymentDetails = {
+                    method: selectedPaymentMethod === 'credit' ? 'Kredi Kartı' : 'Banka Kartı',
+                    cardName: cardName,
+                    cardNumber: cardNumber,
+                    cardExpiry: cardExpiry
+                };
+            } else if (selectedPaymentMethod === 'cash') {
+                const posDevice = document.getElementById('posDevice').checked;
+                paymentDetails = {
+                    method: 'Kapıda Ödeme',
+                    posDevice: posDevice
+                };
+            }
+            
+            // Save card if user chose to save it
+            if (isNewCardEntry && currentSaveChoice === 'save') {
+                saveNewCard();
+            }
+            
+            closePaymentModal();
+            submitOrder();
+        }
+        
+        // Sipariş ver
+        function checkout() {
+            if (!isLoggedIn()) {
+                alert('Sipariş vermek için giriş yapmalısınız!');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (cart.length === 0) {
+                alert('Sepetiniz boş!');
+                return;
+            }
+            
+            // Minimum sipariş kontrolü
+            let subtotal = 0;
+            cart.forEach(item => {
+                subtotal += item.price * item.quantity;
+            });
+            
+            if (restaurantData && subtotal < restaurantData.MinOrderAmount) {
+                const remaining = (restaurantData.MinOrderAmount - subtotal).toFixed(2);
+                alert(`⚠️ Minimum sepet tutarı ${restaurantData.MinOrderAmount} ₺\n\nSipariş vermek için ${remaining} ₺ daha ürün eklemelisiniz.`);
+                return;
+            }
+            
+            // Load saved cards and open payment modal
+            loadSavedCards();
+            document.getElementById('paymentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        async function submitOrder() {
+            const user = getUser();
+            if (!user || !user.UserID) {
+                alert('Kullanıcı bilgisi bulunamadı!');
+                return;
+            }
+            
+            if (!paymentDetails.method) {
+                alert('Ödeme bilgisi eksik!');
+                return;
+            }
+            
+            const orderData = {
+                userId: user.UserID,
+                restaurantId: restaurantId,
+                addressId: 1,
+                paymentMethod: paymentDetails.method,
+                items: cart.map(item => ({
+                    menuItemId: item.menuItemId,
+                    quantity: item.quantity,
+                    unitPrice: item.price
+                }))
+            };
+            
+            try {
+                const response = await fetch('/backend/orders.php?action=create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        user_id: orderData.userId,
+                        restaurant_id: orderData.restaurantId,
+                        address_id: orderData.addressId,
+                        payment_method: orderData.paymentMethod
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.order_id) {
+                    for (const item of orderData.items) {
+                        await fetch('/backend/orders.php?action=add_item', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: new URLSearchParams({
+                                order_id: result.order_id,
+                                menu_item_id: item.menuItemId,
+                                quantity: item.quantity,
+                                unit_price: item.unitPrice
+                            })
+                        });
+                    }
+                    
+                    showNotification('✅ Siparişiniz alındı! Teşekkür ederiz.');
+                    cart = [];
+                    updateCart();
+                    saveCartToStorage();
+                    toggleCart();
+                    loadMenu();
+                } else {
+                    showNotification('❌ Sipariş oluşturulamadı: ' + (result.error || 'Bilinmeyen hata'));
+                }
+            } catch (error) {
+                console.error('Sipariş hatası:', error);
+                showNotification('❌ Sipariş gönderilirken bir hata oluştu!');
+            }
+        }
+
+        // 🎯 KATEGORİ FİLTRELEME - BUTON BAZLI
+        // Sayfa yüklendikten sonra butonlara event ekle
+        document.addEventListener('DOMContentLoaded', function() {
+            // Kategori butonlarını dinle
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('menu-tab')) {
+                    const selectedCategory = e.target.textContent.trim();
+                    
+                    // Aktif buton efekti
+                    document.querySelectorAll('.menu-tab').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                    
+                    // Kartları filtrele
+                    //document.querySelectorAll('.menu-card').forEach(card => {
+                      //  const cardCategory = card.dataset.category || '';
+                        
+                       // if (selectedCategory === '🔥 Popüler' || selectedCategory === 'Popüler' || selectedCategory === 'Tümü') {
+                         //   card.style.display = 'flex';
+                        //} else {
+                            // Normalize ederek karşılaştır
+                          //  const normalizeText = (text) => {
+                            //    return text
+                              //      .toLowerCase()
+                                //    .trim()
+                                  //  .normalize('NFD')
+                                    //.replace(/[\u0300-\u036f]/g, '');
+                            //};
+                            
+                            //const match = normalizeText(cardCategory) === normalizeText(selectedCategory);
+                            //card.style.display = match ? 'flex' : 'none';
+                        //}
+                    //});
+                }
+            });
+        });
+
+        // 🎯 GELİŞMİŞ KATEGORİ FİLTRELEME - NORMALIZE BAZLI
+        function normalizeKey(s){
+            return (s || "")
+                .toString()
+                .trim()
+                .toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")   // aksan kaldır
+                .replace(/ı/g, "i")                                // TR i
+                .replace(/[^a-z0-9]+/g, " ")                       // sembolleri boşluk yap
+                .trim();
+        }
+
+        // Sayfa yüklendikten sonra .menu-tab butonlarına filtre ekle
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelectorAll(".menu-tab").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const selected = btn.textContent.trim().replace(/^[\s\uFE0F\u203c-\u3299]+\s*/, ''); // emoji'yi temizle
+                        const selectedNorm = normalizeKey(selected);
+
+                        // aktif buton
+                        document.querySelectorAll(".menu-tab").forEach(b => b.classList.remove("active"));
+                        btn.classList.add("active");
+
+                        let anyVisible = false;
+
+                        document.querySelectorAll(".menu-section").forEach(section => {
+                            const sectionCat = section.dataset.category || section.querySelector(".section-title")?.innerText || "";
+                            const sectionNorm = normalizeKey(sectionCat);
+
+                            if (selected === "Popüler" || selectedNorm.includes("populer") || selectedNorm === "all") {
+                                section.style.display = "";
+                                anyVisible = true;
+                            } else {
+                                const match = sectionNorm === selectedNorm || sectionNorm.includes(selectedNorm);
+                                section.style.display = match ? "" : "none";
+                                if (match) anyVisible = true;
+                            }
+                        });
+
+                        // ürün bulunamadı yazısı yönetimi
+                        const notFound = document.getElementById("notFoundMessage");
+                        if (notFound) {
+                            notFound.style.display = anyVisible ? "none" : "block";
+                        }
+                    });
+                });
+            }, 1000); // Menu yüklendikten sonra çalışsın
+        });
+
+        // 🧪 TEST KODU - KATEGORİ BUTONLARI
+        setTimeout(() => {
+
+            document.addEventListener('click', function (e) {
+                console.log('CLICK:', e.target);
+            });
+
+            document.querySelectorAll('.menu-tab').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.categoryId;
+                    console.log('TIKLANDI:', id);
+
+            document.getElementById('menuContent').innerHTML =
+                `<h1 style="color:red">SADECE ${id}</h1>`;
+
+            if (!window.groupedMenus) {
+            console.error('groupedMenus YOK');
+            return;
+        }
+
+        renderMenus(window.groupedMenus, id);
+    });
+  });
+
+  console.log('🧪 Test event listeners eklendi');
+
+}, 2000);
+    </script>
+
+</body>
+</html>

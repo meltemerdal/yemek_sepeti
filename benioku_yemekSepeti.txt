@@ -1,0 +1,172 @@
+
+YEMEKSEPETI WEB SÝTESÝ PROJESÝ
+MSSQL + PHP + HTML
+
+
+PROJE HAKKINDA
+
+Bu proje, internet üzerinden yemek sipariþi verilmesini saðlayan dinamik bir E-Ticaret web platformudur. Projenin temel amacý; müþterilerin restoranlarý listeleyip sipariþ verebildiði, restoran sahiplerinin kendi menülerini ve sipariþ süreçlerini yönetebildiði, sistem yöneticisinin ise tüm platformu denetleyebildiði entegre bir yapý sunmaktýr. Veirtabaný-web entegrasyonunu uygulamalý olarak öðrenmektedir
+Frontend: HTML
+Backend: PHP
+Veritabaný: Microsoft SQL Server (MSSQL)
+
+DOSYA YAPISI
+
+yemek_sepeti/
+backend/
+ database/
+01_create_tables.sql        (Tablolar)
+02_create_stored_procedures.sql (5 Stored Procedure)
+03_create_triggers.sql      (4 Trigger)
+04_create_view.sql          (1 View)
+05_create_functions.sql     (3 Function)
+06_insert_sample_data.sql   (Örnek veriler)
+config.php                      (Veritabaný baðlantýsý)
+restaurants.php                 (Restoran iþlemleri)
+orders.php                      (Sipariþ iþlemleri)
+users.php                       (Kullanýcý iþlemleri)
+frontend/
+index.html                      (Ana sayfa)
+restaurant.html                 (Restoran menü sayfasý)
+login.html                      (Giriþ sayfasý)
+register.html                   (Kayýt sayfasý)
+Benioku.txt                         (Bu dosya)
+
+VERÝTABANI YAPISI
+
+Tablolar:
+Users: Kullanýcý bilgileri
+Addresses: Kullanýcý adresleri
+Restaurants: Restoranlar
+MenuItems: Menü öðeleri
+Orders: Sipariþler
+OrderDetails: Sipariþ detaylarý
+UserActivityLog: Kullanýcý aktivite loglarý
+OrderStatusLog: Sipariþ durum deðiþiklik loglarý
+
+5 Stored Procedure (SP):
+1. SP_CreateUser: Yeni kullanýcý kaydý
+2. SP_GetRestaurants: Restoran listesi (filtreleme ile)
+3. SP_GetMenuItems: Restoran menüsü
+4. SP_CreateOrder: Sipariþ oluþturma
+5. SP_GetUserOrders: Kullanýcý sipariþ geçmiþi
+
+4 Trigger (TRG):
+1. TRG_OrderDetail_AfterInsert: Stok azaltma ve toplam güncelleme
+2. TRG_User_AfterInsert: Yeni kullanýcý log kaydý
+3. TRG_Order_StatusChange: Sipariþ durum deðiþikliði log
+4. TRG_Order_CancelStock: Ýptal edilen sipariþte stok geri yükleme
+
+1 View (VW):
+1. VW_OrderDetails: Detaylý sipariþ görünümü
+
+3 Function (FN):
+1. FN_CalculateOrderTotal: Sipariþ toplam hesaplama
+2. FN_GetRestaurantRating: Restoran puaný
+3. FN_GetUserOrderCount: Kullanýcý sipariþ sayýsý
+
+
+
+KULLANIM
+
+
+1. ANA SAYFA (index.html)
+   Restoranlarý listeler
+   Kategori ve puana göre filtreleme yapýlabilir
+   Restorana týklayarak menüye gidilir
+
+2. RESTORAN SAYFASI (restaurant.html)
+   Seçilen restoranýn menüsünü gösterir
+   Ürünler kategorilere göre grupludur
+   Sepete ürün eklenebilir
+
+3. KAYIT OL (register.html)
+   Yeni kullanýcý kaydý
+   SP_CreateUser stored procedure kullanýr
+
+4. GÝRÝÞ YAP (login.html)
+   Kullanýcý giriþi
+   Veritabanýndan kullanýcý kontrolü yapar
+
+TEST VERÝLERÝ
+
+Örnek Kullanýcýlar:
+Müþteri: meltem@gmail.com , Þifre: 123456
+Restoran: jamalson@gmail.com, Þifre:123456
+Admin: admin@yemeksepeti.com , Þifre:123456
+
+
+Örnek Restoranlar:
+ JAMALL (Tatlý & Kahve)
+ MNG Musqa Burger (Burger)
+ Usta Dönerci (Döner)
+
+SORUN GÝDERME
+
+SORUN 1: "Veritabaný Baðlantý Hatasý"
+Çözüm:
+ SQL Server çalýþýyor mu kontrol edin
+ SQL Server Browser servisi aktif mi kontrol edin
+ config.php'deki baðlantý bilgilerini kontrol edin
+ TCP/IP protokolü etkin mi kontrol edin
+ Firewall ayarlarýný kontrol edin
+
+SORUN 2: "Call to undefined function sqlsrv_connect()"
+Çözüm:
+ SQLSRV driver'ý kuruldu mu kontrol edin
+ php.ini'de extension satýrlarý var mý kontrol edin
+ PHP'yi yeniden baþlatýn
+ phpinfo() ile driver'ýn yüklendiðini kontrol edin
+
+SORUN 3: Sayfalar açýlmýyor
+Çözüm:
+ Web sunucusu çalýþýyor mu kontrol edin
+ URL'yi doðru yazdýðýnýzdan emin olun
+ Tarayýcý konsolunda hata var mý kontrol edin
+ PHP error_log dosyasýný kontrol edin
+
+SORUN 4: API çaðrýlarý çalýþmýyor
+Çözüm:
+ Tarayýcý Network sekmesinde istekleri kontrol edin
+ PHP dosyalarýnýn yolu doðru mu kontrol edin
+ CORS hatasý varsa backend dosyalarýna ekleyin:
+  header('Access-Control-Allow-Origin: *');
+
+TEKNÝK DETAYLAR
+
+Veritabaný Ýliþkileri:
+ Users 1-N Addresses (Bir kullanýcýnýn birden fazla adresi)
+ Users 1-N Orders (Bir kullanýcýnýn birden fazla sipariþi)
+ Restaurants 1-N MenuItems (Bir restoranýn birden fazla menü öðesi)
+ Restaurants 1-N Orders (Bir restorana birden fazla sipariþ)
+ Orders 1-N OrderDetails (Bir sipariþin birden fazla ürünü)
+ MenuItems 1-N OrderDetails (Bir ürün birden fazla sipariþte)
+
+Güvenlik:
+ SQL Injection korumasý: Parametreli sorgular kullanýlmýþtýr
+ XSS korumasý: htmlspecialchars() fonksiyonu kullanýlmýþtýr
+ Þifreler: MD5 hash (Üretimde bcrypt kullanýlmalýdýr)
+
+Performans:
+ Index'ler: Primary Key ve Foreign Key'lerde otomatik
+ View: Sýk kullanýlan JOIN sorgularýný hýzlandýrýr
+Stored Procedure'ler: Veritabaný tarafýnda çalýþýr, að trafiðini azaltýr
+
+PROJE ÖZELLÝKLERÝ
+
+ MSSQL veritabaný kullanýmý
+ 5 Stored Procedure
+ 4 Trigger
+ 1 View
+ 3 Function
+ ER diagramýna uygun tablo yapýsý
+ PHP ile MSSQL baðlantýsý
+ HTML frontend
+ Çalýþýr proje yapýsý
+ Kod açýklamalarý
+ Örnek veriler
+
+
+Teknolojiler: MSSQL + PHP + HTML
+
+

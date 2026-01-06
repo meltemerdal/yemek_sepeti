@@ -1,0 +1,51 @@
+[
+    {
+        "UserID": 1,
+        "FullName": "Murathan Korkmaz",
+        "Email": "a@a.com",
+        "Phone": "5551234567",
+        "Password": "0cc175b9c0f1b6a831c399e269772661"
+    },
+    {
+        "UserID": 2,
+        "FullName": "Test Kullan\u0131c\u0131",
+        "Email": "test@test.com",
+        "Phone": "5559876543",
+        "Password": "098f6bcd4621d373cade4e832627b4f6"
+    },
+    {
+        "UserID": 3,
+        "FullName": "Meltem Erdal",
+        "Email": "meltemerdal25@gmail.com",
+        "Phone": "3453454545",
+        "Password": "508df4cb2f4d8f80519256258cfb975f"
+    },
+    {
+        "UserID": 4,
+        "FullName": "murathan korkmaz",
+        "Email": "murathan@gmail.com",
+        "Phone": "4564565656",
+        "Password": "e10adc3949ba59abbe56e057f20f883e"
+    },
+    {
+        "UserID": 5,
+        "FullName": "gizem",
+        "Email": "gizem@gmail.com",
+        "Phone": "7897898989",
+        "Password": "e10adc3949ba59abbe56e057f20f883e"
+    },
+    {
+        "UserID": 6,
+        "FullName": "deneme Deneme",
+        "Email": "adsiz@gmail.com",
+        "Phone": "555 256 56 56",
+        "Password": "e10adc3949ba59abbe56e057f20f883e"
+    },
+    {
+        "UserID": 7,
+        "FullName": "adsiz",
+        "Email": "adsiz1@gmail.com",
+        "Phone": "555 485 78 48",
+        "Password": "e10adc3949ba59abbe56e057f20f883e"
+    }
+]
